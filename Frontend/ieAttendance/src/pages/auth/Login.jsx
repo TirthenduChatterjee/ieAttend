@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link,useNavigate } from "react-router";
 import { useState } from "react";
 import FloatingInput from "../../components/auth/FloatingInput";
 const LoginHeader = () => (
@@ -17,12 +17,14 @@ const LoginHeader = () => (
   </div>
 );
 export default function Login() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const handleSubmit = (e) => {
     e.preventDefault();
+    navigate("/dashboard");
     // Handle login logic here
   }
   return (
