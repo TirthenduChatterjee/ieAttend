@@ -1,6 +1,4 @@
-import { Link } from "react-router";
 import { Outlet } from "react-router";
-import AuthIllustration from "../assets/auth-illustration.svg";
 
 export default function AuthLayout() {
   return (

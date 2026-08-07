@@ -4,6 +4,7 @@ using HRMS.Models;
 using HRMS.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HRMS.Controllers;
 
@@ -11,6 +12,7 @@ namespace HRMS.Controllers;
 [Route("api/auth")]
 public class AuthController(HrmsDbContext db, PasswordService passwords, TokenService tokens) : ControllerBase
 {
+    [Authorize(Roles = "Hr")]
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterRequest request)
     {

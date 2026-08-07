@@ -9,3 +9,4 @@ public record CheckOutRequest(string? Notes);
 public record CreateLeaveRequest(LeaveType Type, DateOnly StartDate, DateOnly EndDate, string Reason);
 public record ReviewLeaveRequest(LeaveStatus Status, string? Comment);
 public record UpdateEmployeeRequest(string FullName, string? Department, decimal AnnualLeaveAllowance, bool IsActive);
+public record CreateDepartmentRequest(string Name);

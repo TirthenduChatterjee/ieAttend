@@ -1,16 +1,16 @@
 import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router";
+import { clearSession, currentUser } from "../auth";
 import {
-  Building2,
   CalendarDays,
+  Building2,
   ChevronDown,
   Clock3,
-  FileText,
   LayoutDashboard,
-  LogOut,
   Menu,
+  LogOut,
   Plane,
   Plus,
-  Search,
   Users,
   X,
 } from "lucide-react";
@@ -20,32 +20,26 @@ import {
  * ================================================================== */
 const navByRole = {
   hr: [
-    [LayoutDashboard, "Dashboard", "#dashboard"],
-    [Users, "Employees", "#employees"],
-    [Clock3, "Attendance", "#attendance"],
-    [Plane, "Leave", "#leave"],
-    [FileText, "Reports", "#reports"],
-    [Building2, "Departments", "#departments"],
-    [LogOut, "Logout", "#logout"],
+    [LayoutDashboard, "Dashboard", "/dashboard"],
+    [Users, "Employees", "/employees"],
+    [Clock3, "Attendance", "/attendance"],
+    [Plane, "Leave", "/leave"],
+    [Building2, "Departments", "/departments"],
   ],
   employee: [
-    [LayoutDashboard, "Dashboard", "#dashboard"],
-    [Clock3, "Attendance", "#attendance"],
-    [Plane, "Leave", "#leave"],
-    [FileText, "My Activity", "#activities"],
-    [LogOut, "Logout", "#logout"],
+    [LayoutDashboard, "Dashboard", "/dashboard"],
+    [Clock3, "Attendance", "/attendance"],
+    [Plane, "Leave", "/leave"],
   ],
 };
 
 const shortcutsByRole = {
   hr: [
-    [Plus, "Add Employee", "#employees"],
-    [CalendarDays, "Apply Leave", "#leave"],
-    [FileText, "Generate Report", "#reports"],
+    [Plus, "Add Employee", "/employees"],
+    [CalendarDays, "Apply Leave", "/leave"],
   ],
   employee: [
-    [CalendarDays, "Apply Leave", "#leave"],
-    [FileText, "View Payslip", "#activities"],
+    [CalendarDays, "Apply Leave", "/leave"],
   ],
 };
 
@@ -69,7 +63,7 @@ function Avatar({ initials, className = "" }) {
  *   - mobileOpen: mobile slide-in drawer
  *   - onClose   : close the mobile drawer
  * ================================================================== */
-function Sidebar({ role = "hr", active = "Dashboard", collapsed, mobileOpen, onClose }) {
+function Sidebar({ role = "hr", active = "Dashboard", collapsed, mobileOpen, onClose, onLogout }) {
   const nav = navByRole[role] ?? navByRole.hr;
   const shortcuts = shortcutsByRole[role] ?? shortcutsByRole.hr;
 
@@ -102,8 +96,8 @@ function Sidebar({ role = "hr", active = "Dashboard", collapsed, mobileOpen, onC
         {/* Main nav */}
         <nav className="space-y-1">
           {nav.map(([Icon, label, href]) => (
-            <a
-              href={href}
+            <Link
+              to={href}
               key={label}
               onClick={onClose}
               title={collapsed ? label : undefined}
@@ -117,7 +111,7 @@ function Sidebar({ role = "hr", active = "Dashboard", collapsed, mobileOpen, onC
             >
               <Icon size={19} className="shrink-0" />
               {!collapsed && <span className="whitespace-nowrap">{label}</span>}
-            </a>
+            </Link>
           ))}
         </nav>
 
@@ -127,8 +121,8 @@ function Sidebar({ role = "hr", active = "Dashboard", collapsed, mobileOpen, onC
             <p className="mb-3 text-[10px] font-bold text-slate-500">SHORTCUTS</p>
           )}
           {shortcuts.map(([Icon, label, href]) => (
-            <a
-              href={href}
+            <Link
+              to={href}
               key={label}
               onClick={onClose}
               title={collapsed ? label : undefined}
@@ -138,9 +132,12 @@ function Sidebar({ role = "hr", active = "Dashboard", collapsed, mobileOpen, onC
             >
               <Icon size={17} className="shrink-0" />
               {!collapsed && <span className="whitespace-nowrap">{label}</span>}
-            </a>
+            </Link>
           ))}
         </div>
+        <button onClick={onLogout} title={collapsed ? "Logout" : undefined} className={`absolute bottom-4 left-3 right-3 flex items-center rounded-md py-3 font-medium text-slate-600 hover:bg-rose-50 hover:text-rose-600 ${collapsed ? "justify-center" : "gap-4 px-3"}`}>
+          <LogOut size={19} /> {!collapsed && <span>Logout</span>}
+        </button>
       </aside>
     </>
   );
@@ -193,9 +190,13 @@ function Header({ user, onToggleSidebar }) {
  *   - mobileOpen       : slide-in drawer on small screens
  *  One Menu button drives the right behaviour based on screen size.
  * ================================================================== */
-export default function DashboardLayout({ role = "hr", user, active, children }) {
+export default function DashboardLayout({ role, user, active, children }) {
   const [desktopCollapsed, setDesktopCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const session = user || currentUser();
+  const resolvedRole = role || (session?.role === "Hr" ? "hr" : "employee");
 
   const handleToggle = () => {
     // lg breakpoint = 1024px. Collapse on desktop, drawer on mobile.
@@ -209,14 +210,15 @@ export default function DashboardLayout({ role = "hr", user, active, children })
   return (
     <div className="flex min-h-screen bg-slate-50 font-sans text-slate-800">
       <Sidebar
-        role={role}
-        active={active}
+        role={resolvedRole}
+        active={active || (location.pathname === "/employees" ? "Employees" : location.pathname === "/attendance" ? "Attendance" : location.pathname === "/leave" ? "Leave" : location.pathname === "/departments" ? "Departments" : "Dashboard")}
         collapsed={desktopCollapsed}
         mobileOpen={mobileOpen}
         onClose={() => setMobileOpen(false)}
+        onLogout={() => { clearSession(); navigate("/"); }}
       />
       <main className="min-w-0 flex-1" id="dashboard">
-        <Header user={user} onToggleSidebar={handleToggle} />
+        <Header user={{ name: session?.fullName, initials: session?.fullName?.split(" ").map(x => x[0]).slice(0,2).join(""), role: session?.role === "Hr" ? "HR Manager" : "Employee" }} onToggleSidebar={handleToggle} />
         <div className="mx-auto max-w-[1500px] p-3.5">{children}</div>
       </main>
     </div>

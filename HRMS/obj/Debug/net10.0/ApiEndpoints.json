@@ -115,6 +115,32 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "HRMS.Controllers.DepartmentsController",
+    "Method": "List",
+    "RelativePath": "api/departments",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HRMS.Controllers.DepartmentsController",
+    "Method": "Create",
+    "RelativePath": "api/departments",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "HRMS.Contracts.CreateDepartmentRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "HRMS.Controllers.EmployeesController",
     "Method": "List",
     "RelativePath": "api/employees",

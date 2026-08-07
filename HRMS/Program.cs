@@ -8,6 +8,10 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddCors(options => options.AddPolicy("frontend", policy => policy
+    .AllowAnyOrigin()
+    .AllowAnyHeader()
+    .AllowAnyMethod()));
 builder.Services.AddDbContext<HrmsDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<PasswordService>();
@@ -36,6 +40,8 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<HrmsDbContext>();
     db.Database.EnsureCreated();
+    db.Database.ExecuteSqlRaw("CREATE TABLE IF NOT EXISTS Departments (Id INTEGER NOT NULL CONSTRAINT PK_Departments PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, IsActive INTEGER NOT NULL, CreatedAtUtc TEXT NOT NULL)");
+    db.Database.ExecuteSqlRaw("CREATE UNIQUE INDEX IF NOT EXISTS IX_Departments_Name ON Departments (Name)");
     if (!db.Employees.Any(x => x.Role == HRMS.Models.UserRole.Hr))
     {
         var config = builder.Configuration.GetSection("SeedHr");
@@ -59,6 +65,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("frontend");
 
 app.UseAuthentication();
 app.UseAuthorization();

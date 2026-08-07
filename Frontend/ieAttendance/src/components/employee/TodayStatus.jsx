@@ -34,9 +34,9 @@ export default function TodayStatus({
           <strong className="text-xs">{checkOut}</strong>
         </div>
       </div>
-      <button className="flex w-full items-center justify-center gap-3 rounded-md bg-blue-600 py-2.5 text-xs font-semibold text-white">
-        Check Out <LogOut size={18} />
-      </button>
+      <a href="/attendance" className="flex w-full items-center justify-center gap-3 rounded-md bg-blue-600 py-2.5 text-xs font-semibold text-white">
+        Manage attendance <LogOut size={18} />
+      </a>
     </Card>
   );
 }

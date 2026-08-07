@@ -8,6 +8,7 @@ public class HrmsDbContext(DbContextOptions<HrmsDbContext> options) : DbContext(
     public DbSet<Employee> Employees => Set<Employee>();
     public DbSet<Attendance> Attendances => Set<Attendance>();
     public DbSet<LeaveRequest> LeaveRequests => Set<LeaveRequest>();
+    public DbSet<Department> Departments => Set<Department>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -28,6 +29,10 @@ public class HrmsDbContext(DbContextOptions<HrmsDbContext> options) : DbContext(
             entity.Property(x => x.Type).HasConversion<string>();
             entity.Property(x => x.Status).HasConversion<string>();
             entity.Property(x => x.Days).HasPrecision(5, 1);
+        });
+        modelBuilder.Entity<Department>(entity =>
+        {
+            entity.HasIndex(x => x.Name).IsUnique();
         });
     }
 }

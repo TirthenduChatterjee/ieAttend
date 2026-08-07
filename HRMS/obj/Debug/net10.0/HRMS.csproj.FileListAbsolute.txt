@@ -75,4 +75,5 @@ C:\Users\tirth\source\repos\HRMS\HRMS\bin\Debug\net10.0\runtimes\win-arm\native\
 C:\Users\tirth\source\repos\HRMS\HRMS\bin\Debug\net10.0\runtimes\win-arm64\native\e_sqlite3.dll
 C:\Users\tirth\source\repos\HRMS\HRMS\bin\Debug\net10.0\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\tirth\source\repos\HRMS\HRMS\bin\Debug\net10.0\runtimes\win-x86\native\e_sqlite3.dll
+C:\Users\tirth\source\repos\HRMS\HRMS\obj\Debug\net10.0\HRMS.sourcelink.json
 C:\Users\tirth\source\repos\HRMS\HRMS\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt

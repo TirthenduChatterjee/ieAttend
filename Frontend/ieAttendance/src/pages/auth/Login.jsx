@@ -1,5 +1,7 @@
-import { Link,useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { useState } from "react";
+import api from "../../api/client";
+import { saveSession } from "../../auth";
 import FloatingInput from "../../components/auth/FloatingInput";
 const LoginHeader = () => (
   <div className="mb-8">
@@ -22,17 +24,21 @@ export default function Login() {
     email: "",
     password: "",
   });
-  const handleSubmit = (e) => {
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate("/dashboard");
-    // Handle login logic here
+    setError(""); setLoading(true);
+    try { const { data } = await api.post("/auth/login", formData); saveSession(data); navigate("/dashboard"); }
+    catch (err) { setError(err.message); }
+    finally { setLoading(false); }
   }
   return (
     <div className="login w-full max-w-md bg-white rounded-2xl shadow-md p-8">
       {/* Header */}
       <LoginHeader />
       {/* Form */}
-      <form className="space-y-5">
+      <form className="space-y-5" onSubmit={handleSubmit}>
         {/* Email */}
         <FloatingInput
           label="Email Address"
@@ -77,10 +83,11 @@ export default function Login() {
         <button
           type="submit" 
           className="w-full rounded-lg bg-indigo-600 py-3 font-semibold text-white transition hover:bg-indigo-700 cursor-pointer"
-          onClick={handleSubmit}
+          disabled={loading}
         >
-          Login
+          {loading ? "Logging in..." : "Login"}
         </button>
+        {error && <p className="rounded-md bg-rose-50 p-3 text-sm text-rose-600">{error}</p>}
       </form>
     </div>
   );

@@ -20,6 +20,14 @@ public class Employee
     public ICollection<LeaveRequest> LeaveRequests { get; set; } = new List<LeaveRequest>();
 }
 
+public class Department
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public bool IsActive { get; set; } = true;
+    public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
+}
+
 public class Attendance
 {
     public int Id { get; set; }
