@@ -3,7 +3,7 @@ import Login from "./pages/auth/Login";
 import AuthLayout from "./layouts/AuthLayout";
 import PageNotFound from "./pages/PageNotFound";
 import Register from "./pages/auth/Register";
-import Dashboard from "./layouts/Dashboard";
+import Dashboard from "./pages/Dashboard";
 export default function App() {
   return (
     <BrowserRouter>
