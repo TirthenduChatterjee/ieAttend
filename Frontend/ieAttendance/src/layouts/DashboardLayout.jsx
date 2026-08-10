@@ -22,8 +22,8 @@ const navByRole = {
   hr: [
     [LayoutDashboard, "Dashboard", "/dashboard"],
     [Users, "Employees", "/employees"],
-    [Clock3, "Attendance", "/attendance"],
     [Plane, "Leave", "/leave"],
+    [CalendarDays, "Holidays", "/holidays"],
     [Building2, "Departments", "/departments"],
   ],
   employee: [
@@ -36,7 +36,7 @@ const navByRole = {
 const shortcutsByRole = {
   hr: [
     [Plus, "Add Employee", "/employees"],
-    [CalendarDays, "Apply Leave", "/leave"],
+    [CalendarDays, "Manage holidays", "/holidays"],
   ],
   employee: [
     [CalendarDays, "Apply Leave", "/leave"],
@@ -211,7 +211,7 @@ export default function DashboardLayout({ role, user, active, children }) {
     <div className="flex min-h-screen bg-slate-50 font-sans text-slate-800">
       <Sidebar
         role={resolvedRole}
-        active={active || (location.pathname === "/employees" ? "Employees" : location.pathname === "/attendance" ? "Attendance" : location.pathname === "/leave" ? "Leave" : location.pathname === "/departments" ? "Departments" : "Dashboard")}
+        active={active || (location.pathname === "/employees" ? "Employees" : location.pathname === "/attendance" ? "Attendance" : location.pathname === "/leave" ? "Leave" : location.pathname === "/holidays" ? "Holidays" : location.pathname === "/departments" ? "Departments" : "Dashboard")}
         collapsed={desktopCollapsed}
         mobileOpen={mobileOpen}
         onClose={() => setMobileOpen(false)}

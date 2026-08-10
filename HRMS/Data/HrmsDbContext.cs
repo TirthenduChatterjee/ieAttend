@@ -9,6 +9,7 @@ public class HrmsDbContext(DbContextOptions<HrmsDbContext> options) : DbContext(
     public DbSet<Attendance> Attendances => Set<Attendance>();
     public DbSet<LeaveRequest> LeaveRequests => Set<LeaveRequest>();
     public DbSet<Department> Departments => Set<Department>();
+    public DbSet<Holiday> Holidays => Set<Holiday>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -33,6 +34,11 @@ public class HrmsDbContext(DbContextOptions<HrmsDbContext> options) : DbContext(
         modelBuilder.Entity<Department>(entity =>
         {
             entity.HasIndex(x => x.Name).IsUnique();
+        });
+        modelBuilder.Entity<Holiday>(entity =>
+        {
+            entity.HasIndex(x => x.HolidayDate).IsUnique();
+            entity.Property(x => x.Name).HasMaxLength(120);
         });
     }
 }

@@ -10,3 +10,5 @@ public record CreateLeaveRequest(LeaveType Type, DateOnly StartDate, DateOnly En
 public record ReviewLeaveRequest(LeaveStatus Status, string? Comment);
 public record UpdateEmployeeRequest(string FullName, string? Department, decimal AnnualLeaveAllowance, bool IsActive);
 public record CreateDepartmentRequest(string Name);
+public record CreateHolidayRequest(string Name, DateOnly HolidayDate, string? Description);
+public record UpdateHolidayRequest(string Name, DateOnly HolidayDate, string? Description);

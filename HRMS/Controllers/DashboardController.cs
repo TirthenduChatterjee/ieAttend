@@ -36,14 +36,21 @@ public class DashboardController(HrmsDbContext db) : ControllerBase
     {
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var employees = await db.Employees.CountAsync(x => x.Role == UserRole.Employee && x.IsActive);
-        var records = await db.Attendances.Include(x => x.Employee).Where(x => x.WorkDate == today).ToListAsync();
+        var activeEmployees = await db.Employees.Where(x => x.Role == UserRole.Employee && x.IsActive).Select(x => new { x.Id, x.FullName, x.Department }).ToListAsync();
+        var records = await db.Attendances.Include(x => x.Employee).Where(x => x.WorkDate == today && x.Employee.IsActive).ToListAsync();
         var pending = await db.LeaveRequests.CountAsync(x => x.Status == LeaveStatus.Pending);
         return Ok(new
         {
             totalEmployees = employees,
             today = new { checkedIn = records.Count, present = records.Count(x => x.Status == AttendanceStatus.Present), late = records.Count(x => x.Status == AttendanceStatus.Late), halfDay = records.Count(x => x.Status == AttendanceStatus.HalfDay), absent = Math.Max(0, employees - records.Count) },
+            attendanceBreakdown = new
+            {
+                present = records.Where(x => x.Status == AttendanceStatus.Present).Select(x => new { x.Employee.Id, x.Employee.FullName, x.Employee.Department }).ToList(),
+                late = records.Where(x => x.Status == AttendanceStatus.Late).Select(x => new { x.Employee.Id, x.Employee.FullName, x.Employee.Department }).ToList(),
+                absent = activeEmployees.Where(x => !records.Any(record => record.EmployeeId == x.Id)).ToList()
+            },
             pendingLeaveRequests = pending,
-            attendance = records.Select(x => new { employee = new { x.Employee.Id, x.Employee.FullName, x.Employee.Department }, record = AttendanceController.ToResponse(x) })
+            attendance = records.Select(x => new { employee = new { x.Employee.Id, x.Employee.FullName, x.Employee.Department }, status = x.Status.ToString() })
         });
     }
 

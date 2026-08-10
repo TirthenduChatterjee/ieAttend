@@ -28,6 +28,15 @@ public class Department
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
 }
 
+public class Holiday
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public DateOnly HolidayDate { get; set; }
+    public string? Description { get; set; }
+    public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
+}
+
 public class Attendance
 {
     public int Id { get; set; }

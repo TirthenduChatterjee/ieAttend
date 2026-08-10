@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddCors(options => options.AddPolicy("frontend", policy => policy
     .AllowAnyOrigin()
     .AllowAnyHeader()
@@ -42,6 +44,8 @@ using (var scope = app.Services.CreateScope())
     db.Database.EnsureCreated();
     db.Database.ExecuteSqlRaw("CREATE TABLE IF NOT EXISTS Departments (Id INTEGER NOT NULL CONSTRAINT PK_Departments PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, IsActive INTEGER NOT NULL, CreatedAtUtc TEXT NOT NULL)");
     db.Database.ExecuteSqlRaw("CREATE UNIQUE INDEX IF NOT EXISTS IX_Departments_Name ON Departments (Name)");
+    db.Database.ExecuteSqlRaw("CREATE TABLE IF NOT EXISTS Holidays (Id INTEGER NOT NULL CONSTRAINT PK_Holidays PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, HolidayDate TEXT NOT NULL, Description TEXT NULL, CreatedAtUtc TEXT NOT NULL)");
+    db.Database.ExecuteSqlRaw("CREATE UNIQUE INDEX IF NOT EXISTS IX_Holidays_HolidayDate ON Holidays (HolidayDate)");
     if (!db.Employees.Any(x => x.Role == HRMS.Models.UserRole.Hr))
     {
         var config = builder.Configuration.GetSection("SeedHr");

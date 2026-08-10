@@ -194,6 +194,69 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "HRMS.Controllers.HolidayController",
+    "Method": "List",
+    "RelativePath": "api/holidays",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HRMS.Controllers.HolidayController",
+    "Method": "Create",
+    "RelativePath": "api/holidays",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "HRMS.Contracts.CreateHolidayRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HRMS.Controllers.HolidayController",
+    "Method": "Update",
+    "RelativePath": "api/holidays/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "HRMS.Contracts.UpdateHolidayRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "HRMS.Controllers.HolidayController",
+    "Method": "Delete",
+    "RelativePath": "api/holidays/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "HRMS.Controllers.LeaveController",
     "Method": "Apply",
     "RelativePath": "api/leaves",

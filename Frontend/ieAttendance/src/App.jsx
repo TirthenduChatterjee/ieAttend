@@ -7,12 +7,14 @@ import EmployeesPage from "./pages/EmployeesPage";
 import AttendancePage from "./pages/AttendancePage";
 import LeavePage from "./pages/LeavePage";
 import DepartmentsPage from "./pages/DepartmentsPage";
+import HolidaysPage from "./pages/HolidaysPage";
 import { currentUser } from "./auth";
 
-function Protected({ children, hrOnly = false }) {
+function Protected({ children, hrOnly = false, employeeOnly = false }) {
   const user = currentUser();
   if (!user) return <Navigate to="/" replace />;
   if (hrOnly && user.role !== "Hr") return <Navigate to="/dashboard" replace />;
+  if (employeeOnly && user.role === "Hr") return <Navigate to="/dashboard" replace />;
   return children;
 }
 export default function App() {
@@ -24,9 +26,10 @@ export default function App() {
         </Route>
         <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
         <Route path="/employees" element={<Protected hrOnly><EmployeesPage /></Protected>} />
-        <Route path="/attendance" element={<Protected><AttendancePage /></Protected>} />
+        <Route path="/attendance" element={<Protected employeeOnly><AttendancePage /></Protected>} />
         <Route path="/leave" element={<Protected><LeavePage /></Protected>} />
         <Route path="/departments" element={<Protected hrOnly><DepartmentsPage /></Protected>} />
+        <Route path="/holidays" element={<Protected hrOnly><HolidaysPage /></Protected>} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
