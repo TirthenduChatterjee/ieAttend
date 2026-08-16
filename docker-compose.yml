@@ -1,0 +1,17 @@
+services:
+
+  frontend:
+    build: ./Frontend/ieAttendance
+    image: ie-attend-frontend:latest
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  backend:
+    image: ie-attend-backend:latest
+    build:
+      context: .
+      dockerfile: HRMS/Dockerfile
+    ports:
+      - "7207:7207"
