@@ -1,43 +1,65 @@
-name: "Deploy to Linux Server"
+name: Deploy to Linux Server
 
 on:
   workflow_run:
     workflows: ["Build and Push"]
     types:
       - completed
+
 jobs:
   validate:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     environment: Development
+
     steps:
       - name: Validate required secrets
         run: |
-          echo "VM_HOST: ${{ secrets.SSH_HOST != '' }}"
-          echo "VM_USER: ${{ secrets.SSH_USER != '' }}"
-          echo "VM_SSH_KEY: ${{ secrets.SSH_KEY != '' }}"
+          echo "SSH_HOST: ${{ secrets.SSH_HOST != '' }}"
+          echo "SSH_USER: ${{ secrets.SSH_USER != '' }}"
+          echo "SSH_KEY: ${{ secrets.SSH_KEY != '' }}"
           echo "GHCR_PAT: ${{ secrets.GHCR_PAT != '' }}"
 
   authenticate:
     needs: validate
     runs-on: ubuntu-latest
     environment: Development
+
     steps:
-      - name: "Login to GHCR on VM"
-        uses: appleboy/ssh-action@v0.1.5
+      - name: Login to GHCR on VM
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u "${{ github.repository_owner }}" --password-stdin
-            
-  deploy:
+            echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io \
+              -u "${{ github.repository_owner }}" --password-stdin
+
+  copy-compose:
     needs: authenticate
     runs-on: ubuntu-latest
     environment: Development
-    steps:         
-      - name: "Pull latest Docker images"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Copy docker-compose.yml to VM
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "docker-compose.yml"
+          target: "~/ieAttend"
+
+  deploy:
+    needs: copy-compose
+    runs-on: ubuntu-latest
+    environment: Development
+
+    steps:
+      - name: Pull latest Docker images and restart containers
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -45,5 +67,6 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd ~/ieAttend
+
             docker compose pull
             docker compose up -d --remove-orphans
