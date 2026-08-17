@@ -1,16 +1,18 @@
 name: Deploy to Linux Server
 
 on:
-  workflow_run:
-    workflows: ["Build and Push"]
-    types:
-      - completed
-
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select the environment to deploy'
+        required: true
+        default: 'Development'
+        type: environment
+        
 jobs:
   validate:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    environment: Development
+    environment: ${{inputs.environment}}
 
     steps:
       - name: Validate required secrets
@@ -23,7 +25,7 @@ jobs:
   authenticate:
     needs: validate
     runs-on: ubuntu-latest
-    environment: Development
+    environment: ${{inputs.environment }}
 
     steps:
       - name: Login to GHCR on VM
@@ -39,7 +41,7 @@ jobs:
   copy-compose:
     needs: authenticate
     runs-on: ubuntu-latest
-    environment: Development
+    environment: ${{inputs.environment}}
 
     steps:
       - uses: actions/checkout@v4
@@ -56,7 +58,7 @@ jobs:
   deploy:
     needs: copy-compose
     runs-on: ubuntu-latest
-    environment: Development
+    environment: ${{inputs.environment }}
     steps:
       - name: Pull latest Docker images and restart containers
         uses: appleboy/ssh-action@v1.2.0
