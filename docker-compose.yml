@@ -2,7 +2,7 @@ services:
 
   frontend:
     build: ./Frontend/ieAttendance
-    image: ghcr.io/${GITHUB_REPOSITORY_OWNER}/ie-attend-frontend:latest
+    image: ghcr.io/${GITHUB_REPOSITORY_OWNER}.lowercase/ie-attend-frontend:latest
     ports:
       - "80:80"
     depends_on:

@@ -19,6 +19,12 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - run: docker compose build
-      - run: docker compose push
+    
+      - name: Set Username to lowercase
+        run: echo "GITHUB_REPOSITORY_OWNER=$(echo ${{ github.repository_owner }} | tr 'A-Z' 'a-z')" >> $GITHUB_ENV
+      
+      - name: Build Docker Images
+        run: docker compose build
+      
+      - name: Push Docker Images
+        run: docker compose push
