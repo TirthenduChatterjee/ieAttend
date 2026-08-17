@@ -9,6 +9,7 @@ jobs:
   deploy:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+    environment: Development
     steps:
 
       - name: "Login to GHCR on VM"
