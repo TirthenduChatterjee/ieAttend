@@ -58,7 +58,9 @@ jobs:
   deploy:
     needs: copy-compose
     runs-on: ubuntu-latest
-    environment: ${{inputs.environment }}
+    environment: 
+        name: ${{inputs.environment }}
+        url: ${{vars.URL}}
     steps:
       - name: Pull latest Docker images and restart containers
         uses: appleboy/ssh-action@v1.2.0
