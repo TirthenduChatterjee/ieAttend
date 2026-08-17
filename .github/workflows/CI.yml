@@ -8,10 +8,14 @@ permissions:
   contents: read
   packages: write
 
+      
 jobs:
   push:
     runs-on: ubuntu-latest
-
+    
+    env:
+      REPOSITORY_OWNER: ${{ vars.REPOSITORY_OWNER }}
+      
     steps:
       - uses: actions/checkout@v4
       - uses: docker/login-action@v3
