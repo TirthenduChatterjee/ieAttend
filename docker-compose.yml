@@ -2,14 +2,14 @@ services:
 
   frontend:
     build: ./Frontend/ieAttendance
-    image: ghcr.io/${GITHUB_REPOSITORY_OWNER}.lowercase/ie-attend-frontend:latest
+    image: ghcr.io/tirthenduchatterjee/ie-attend-frontend:latest
     ports:
       - "80:80"
     depends_on:
       - backend
 
   backend:
-    image: ghcr.io/${GITHUB_REPOSITORY_OWNER}/ie-attend-backend:latest
+    image: ghcr.io/tirthenduchatterjee/ie-attend-backend:latest
     build:
       context: .
       dockerfile: HRMS/Dockerfile
