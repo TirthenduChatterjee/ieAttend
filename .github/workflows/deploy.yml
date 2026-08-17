@@ -6,38 +6,44 @@ on:
     types:
       - completed
 jobs:
-  deploy:
+  validate:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     environment: Development
     steps:
+      - name: Validate required secrets
+        run: |
+          echo "VM_HOST: ${{ secrets.SSH_HOST != '' }}"
+          echo "VM_USER: ${{ secrets.SSH_USER != '' }}"
+          echo "VM_SSH_KEY: ${{ secrets.SSH_KEY != '' }}"
+          echo "GHCR_PAT: ${{ secrets.GHCR_PAT != '' }}"
 
+  authenticate:
+    needs: validate
+    runs-on: ubuntu-latest
+    environment: Development
+    steps:
       - name: "Login to GHCR on VM"
         uses: appleboy/ssh-action@v0.1.5
         with:
-          host: ${{ secrets.SERVER_HOST }}
+          host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io \
-            -u "${{ github.repository_owner }}" --password-stdin
-
+            echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u "${{ github.repository_owner }}" --password-stdin
+            
+  deploy:
+    needs: authenticate
+    runs-on: ubuntu-latest
+    environment: Development
+    steps:         
       - name: "Pull latest Docker images"
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ secrets.VM_HOST }}
-          username: ${{ secrets.VM_USER }}
-          key: ${{ secrets.VM_SSH_KEY }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
           script: |
             cd ~/ieAttend
             docker compose pull
-
-      - name: "Restart Docker containers"
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-            host: ${{ secrets.VM_HOST }}
-            username: ${{ secrets.VM_USER }}
-            key: ${{ secrets.VM_SSH_KEY }}
-            script: |
-                cd ~/ieAttend
-                docker compose up -d 
+            docker compose up -d --remove-orphans
