@@ -2,7 +2,7 @@
 
 > A clean, role-based attendance and leave-management workspace for modern teams.
 
-ieATTEND brings employee directories, daily attendance, leave workflows, holidays, and department management into one focused experience. HR teams get the oversight they need, while employees get a simple self-service portal for checking in and managing time away
+ieATTEND brings employee directories, daily attendance, leave workflows, holidays, and department management into one focused experience. HR teams get the oversight they need, while employees get a simple self-service portal for checking in and managing time away.
 
 <p align="center">
   <img src="docs/screenshots/hr-dashboard.png" alt="ieATTEND HR dashboard" width="88%" />
@@ -90,7 +90,8 @@ npm install
 npm run dev
 ```
 
-Vite will print the local application URL in the terminal. The frontend calls `https://localhost:7207/api` by default. To use a different API endpoint, create `Frontend/ieAttendance/.env.local`:
+Vite will print the local application URL in the terminal. The frontend calls `https://localhost:
+/api` by default. To use a different API endpoint, create `Frontend/ieAttendance/.env.local`:
 
 ```env
 VITE_API_BASE_URL=https://your-api-host/api
