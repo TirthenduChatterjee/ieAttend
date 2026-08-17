@@ -12,7 +12,7 @@ permissions:
 jobs:
   push:
     runs-on: ubuntu-latest
-    
+    environment: Development
     env:
       REPOSITORY_OWNER: ${{ vars.REPOSITORY_OWNER }}
       
