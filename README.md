@@ -2,7 +2,7 @@
 
 > A clean, role-based attendance and leave-management workspace for modern teams.
 
-ieATTEND brings employee directories, daily attendance, leave workflows, holidays, and department management into one focused experience. HR teams get the oversight they need, while employees get a simple self-service portal for checking in and managing time away.
+ieATTEND brings employee directories, daily attendance, leave workflows, holidays, and department management into one focused experience. HR teams get the oversight they need, while employees get a simple self-service portal for checking in and managing time away
 
 <p align="center">
   <img src="docs/screenshots/hr-dashboard.png" alt="ieATTEND HR dashboard" width="88%" />
