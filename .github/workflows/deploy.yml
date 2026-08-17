@@ -57,7 +57,6 @@ jobs:
     needs: copy-compose
     runs-on: ubuntu-latest
     environment: Development
-
     steps:
       - name: Pull latest Docker images and restart containers
         uses: appleboy/ssh-action@v1.2.0
@@ -66,6 +65,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
+            export REPOSITORY_OWNER="${{ vars.REPOSITORY_OWNER }}"
             cd ~/ieAttend
 
             docker compose pull
